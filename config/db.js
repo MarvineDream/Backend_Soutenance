@@ -9,7 +9,7 @@ export const connectToDatabase = async () => {
         if (!uri) {
             throw new Error('La chaîne de connexion à MongoDB est manquante dans les variables d\'environnement.');
         }
-        console.log('connecté à MongoDB:'); 
+        console.log('Tentative de connexion à MongoDB:'); 
         await mongoose.connect(uri);
         console.log('Connexion à la base de données réussie');
     } catch (error) {

@@ -66,7 +66,6 @@ const createUserForAgency = async (req, res) => {
         });  console.log('Seconde Données reçues:', newUser);
 
         
-        
 
         await newUser.save();
         await Agency.findByIdAndUpdate(agencyId, { $push: { users: newUser._id } });
@@ -177,7 +176,3 @@ const deleteUser = async (req, res) => {
 };
 
 export { registerAdmin, loginAdmin, createUserForAgency, getUserById, getAllUsers, updateUser, deleteUser };
-
-
-
-
