@@ -41,19 +41,20 @@ connectToDatabase();
 
 // Middleware pour permettre l'accès à l'API (CORS)
 app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*'); 
+    res.setHeader('Access-Control-Allow-Origin', process.env.CORS_ORIGIN || '*'); 
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader('Access-Control-Max-Age', '1800');
     res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, Origin, X-Requested-With, Content, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-    
+
     // Gérer les requêtes OPTIONS
     if (req.method === 'OPTIONS') {
-        return res.sendStatus(204); 
+        return res.sendStatus(204); // Réponse vide pour les requêtes OPTIONS
     }
-  
-    next(); 
-  });
+
+    next();
+});
+
 
 // Middleware
 app.use(cors());
@@ -137,5 +138,5 @@ cron.schedule('10 16 * * 5', async () => {
 
 
 app.listen(PORT, () => {
-    console.log(`Serveur en cours d'exécution sur http://localhost:${PORT}`);
+    console.log(`Serveur en cours d'exécution sur process.env.CORS_ORIGIN`);
 });
