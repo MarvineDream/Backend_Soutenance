@@ -2,8 +2,6 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import {connectToDatabase} from './config/db.js';
 import userRoutes from './routes/userRoutes.js';
 import supplierRoutes from './routes/SupplierRoutes.js';
@@ -32,8 +30,6 @@ import { createConsumptionReport } from './controllers/ConsumptionReportsControl
 dotenv.config();
 const app = express()
 const PORT = process.env.PORT 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 
 
@@ -62,9 +58,6 @@ app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Configuration du répertoire de sortie pour les fichiers statiques
-const outputDir = path.join(__dirname, 'public'); // Définir le répertoire de sortie
-app.use(express.static(outputDir)); // Servir les fichiers statiques
 
 
 
@@ -113,10 +106,10 @@ cron.schedule('10 16 * * 5', async () => {
                 code_produit:'',
                 product: '',
                 fournisseur:'',
-                stockInitial,
-                entrees,
-                sorties,
-                stockFinal
+                stockInitial:'',
+                entrees:'',
+                sorties:'',
+                stockFinal:''
             }
         };
         const res = {
