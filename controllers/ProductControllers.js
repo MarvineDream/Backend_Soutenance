@@ -38,13 +38,13 @@ export const addProduct = async (req, res) => {
             return res.status(409).json({ error: 'Le code produit doit être unique' });
         }
 
-        const existingProductByName = await Product.findOne({ name, supplier });
+        const existingProductByName = await Product.findOne({ produit, supplier });
         if (existingProductByName) {
             existingProductByName.quantity += quantity;
             await existingProductByName.save();
             return res.status(200).json({ message: 'Quantité mise à jour', product: existingProductByName });
         } else {
-            const newProduct = new Product({ code_produit, name, supplier, category, price, isFree, quantity, minStockLevel });
+            const newProduct = new Product({ code_produit, produit, supplier, category, price, isFree, quantity, minStockLevel });
             await newProduct.save();
             return res.status(201).json(newProduct);
         }
@@ -113,5 +113,4 @@ export const deleteProduct = async (req, res) => {
     }
 };
 
-// Exportation des fonctions
-export default { createProduct, addProduct, getProductsBySupplier, getProductsByCategory, updateProduct, deleteProduct };
+

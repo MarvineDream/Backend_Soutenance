@@ -1,5 +1,9 @@
 import Supplier from '../models/SuppliersModels.js'; 
 
+
+
+
+
 export const createSupplier = async (req, res) => {
     const { name } = req.body;
 
@@ -87,5 +91,4 @@ export const deleteSupplier = async (req, res) => {
     }
 };
 
-// Exportation des fonctions
-export default { createSupplier, getSuppliers, getSupplierById, updateSupplier, deleteSupplier };
+

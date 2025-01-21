@@ -5,16 +5,14 @@ import mongoose from 'mongoose';
 
 
 export const createDistribution = async (req, res) => {
-    const { code_produit, product, quantity, distributedBy, distributedTo, supplier, date } = req.body;
+    const { code_produit, product, quantity, distributedTo, supplier, date, user } = req.body;
 
-    
-    if (!code_produit || !product || !quantity || !distributedBy || !distributedTo || !supplier || !date) {
+    if (!code_produit || !product || !quantity || !distributedTo || !supplier || !date || !user) {
         return res.status(400).json({ error: 'Tous les champs sont requis' });
     }
 
     try {
-        
-        const productFound = await Product.findOne({ code_produit }); 
+        const productFound = await Product.findOne({ code_produit });
         if (!productFound) {
             return res.status(404).json({ error: 'Produit non trouvé' });
         }
@@ -23,33 +21,31 @@ export const createDistribution = async (req, res) => {
             return res.status(400).json({ error: 'ID de produit invalide' });
         }
 
-        
         if (quantity > productFound.quantity) {
             return res.status(400).json({ error: 'Quantité demandée est supérieure à la quantité disponible' });
         }
 
-        
+        const validLocations = ['Port-Gentil', 'Makokou', 'Mouila', 'Libreville'];
+        if (!validLocations.includes(distributedTo)) {
+            return res.status(400).json({ error: 'Localisation non valide' });
+        }
+
         const distribution = new Distribute({
-            code_produit, 
-            product, 
+            code_produit,
+            product,
             quantity,
-            distributedBy,
             distributedTo,
             supplier,
-            date
+            date,
         });
 
         await distribution.save();
 
-        
         productFound.quantity -= quantity;
         await productFound.save();
 
         res.status(201).json(distribution);
     } catch (error) {
-        
-        
-        
         if (error.name === 'ValidationError') {
             return res.status(400).json({ error: 'Erreur de validation', details: error.message });
         }
@@ -62,21 +58,17 @@ export const createDistribution = async (req, res) => {
 
 
 
-export const getDistributions = async (req, res) => {
+export const getUserDistributions = async (req, res) => {
+    const userId = req.params.userId; 
+
     try {
-        const distributions = await Distribute.find()
-            .populate('code_produit')
-            .populate('product')
-            .populate('Agency')
-            .populate('supplier')
-            .populate('distributedBy')
-            .populate('distributedTo')
-            .populate('date');
+        const distributions = await Distribution.find({ user: userId }).populate('product');
         res.status(200).json(distributions);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ error: 'Erreur du serveur', details: error.message });
     }
 };
+
 
 
 export const getDistributionById = async (req, res) => {
@@ -86,7 +78,6 @@ export const getDistributionById = async (req, res) => {
         .populate('product')
         .populate('Agency')
         .populate('supplier')
-        .populate('distributedBy')
         .populate('distributedTo')
         .populate('date');
         if (!distribution) return res.status(404).json({ message: 'Distribution non trouvée' });

@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 
 
 
-const JWT_SECRET = 'NéPourReussir!!!';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const generateToken = (user) => {
     const payload = {

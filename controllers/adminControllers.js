@@ -78,12 +78,13 @@ const createUserForAgency = async (req, res) => {
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: 'leskalpel@gmail.com', 
-                pass: 'foin tbpe ryrn ltdc' 
+                user: env.process.user, 
+                pass: env.process.pass
+                
             }
         });
 
-        const resetUrl = `http://localhost:3003/api/admin/create-user/reset-password/${resetToken}`; 
+        const resetUrl = `https://backend-soutenance-1.onrender.com/api/admin/create-user/reset-password/${resetToken}`; 
 
         
         if (!newUser.email) {
@@ -91,10 +92,10 @@ const createUserForAgency = async (req, res) => {
         }
 
         const mailOptions = {
-            from: '', 
+            from: 'bamboo', 
             to: newUser.email,
             subject: 'Informations de connexion',
-            text: `Bonjour ${username}, l'administrateur de l'application bamboo assur Stock vient de créer votre compte\n\nVoici un rappel de vos informations\n\n votre nom ${username},\n\nvotre email ${email}\n\nvotre mot de passe est ${password}, vous etes responsable de l'agence ${agencyId}. \n\n Voici le lien pour réinitialiser votre mot de passe:\n\n${resetUrl}\n\nVeuillez changer votre mot de passe après la première connexion.\n\nCordialement,\nL'équipe bamboo Assur`
+            text: `Bonjour ${username}, l'administrateur de l'application bamboo assur Stock vient de créer votre compte\n\nVoici un rappel de vos informations\n\n votre nom ${username},\n\nvotre email ${email}\n\ vous etes responsable de l'agence ${agencyId}. \n\n Voici le lien pour réinitialiser votre mot de passe:\n\n${resetUrl}\n\nVeuillez changer votre mot de passe après la première connexion.\n\nCordialement,\nL'équipe bamboo Assur`
         };
 
         await transporter.sendMail(mailOptions);

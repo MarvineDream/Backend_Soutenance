@@ -54,4 +54,4 @@ export const deleteStockMovement = async (req, res) => {
     }
 };
 
-export default { createStockMovement, getStockMovements, getStockMovementById, updateStockMovement, deleteStockMovement };
+
