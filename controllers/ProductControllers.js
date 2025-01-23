@@ -2,7 +2,7 @@ import Product from '../models/ProductsModels.js';
 
 
 
-export const createProduct = async (req, res) => {
+/* export const createProduct = async (req, res) => {
     const {code_produit, produit } = req.body;
 
     try {
@@ -20,7 +20,7 @@ export const createProduct = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: 'Erreur du serveur', details: error.message });
     }
-}; 
+}; */
 
 
 export const addProduct = async (req, res) => {

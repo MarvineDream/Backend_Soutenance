@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 
 
 const agencySchema = new mongoose.Schema({
-    name: { type: String, required: true, unique: true },
+    nom: { type: String, required: true, unique: true },
 }, 
 { timestamps: true });
 

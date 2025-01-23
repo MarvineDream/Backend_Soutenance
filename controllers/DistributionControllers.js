@@ -1,3 +1,4 @@
+import Agency from '../models/AgencyModels.js';
 import Distribute from '../models/DistributeModels.js'; 
 import Product from '../models/ProductsModels.js'; 
 import mongoose from 'mongoose';
@@ -5,9 +6,9 @@ import mongoose from 'mongoose';
 
 
 export const createDistribution = async (req, res) => {
-    const { code_produit, product, quantity, distributedTo, supplier, date, user } = req.body;
+    const { code_produit, produit, quantite, distribue_a, fournisseur, date } = req.body;
 
-    if (!code_produit || !product || !quantity || !distributedTo || !supplier || !date || !user) {
+    if (!code_produit || !produit || !quantite || !distribue_a || !fournisseur || !date) {
         return res.status(400).json({ error: 'Tous les champs sont requis' });
     }
 
@@ -17,31 +18,34 @@ export const createDistribution = async (req, res) => {
             return res.status(404).json({ error: 'Produit non trouvé' });
         }
 
-        if (!mongoose.Types.ObjectId.isValid(product)) {
+        if (!mongoose.Types.ObjectId.isValid(produit)) {
             return res.status(400).json({ error: 'ID de produit invalide' });
         }
 
-        if (quantity > productFound.quantity) {
+        if (quantite > productFound.quantity) {
             return res.status(400).json({ error: 'Quantité demandée est supérieure à la quantité disponible' });
         }
 
-        const validLocations = ['Port-Gentil', 'Makokou', 'Mouila', 'Libreville'];
-        if (!validLocations.includes(distributedTo)) {
+        // Vérifiez si la localisation est valide en récupérant les agences
+        const agences = await Agency.find(); // Récupère toutes les agences
+        const validAgencyIds = agences.map(agence => agence._id.toString()); // Récupère les IDs des agences
+
+        if (!validAgencyIds.includes(distribue_a)) {
             return res.status(400).json({ error: 'Localisation non valide' });
         }
 
         const distribution = new Distribute({
             code_produit,
-            product,
-            quantity,
-            distributedTo,
-            supplier,
+            produit,
+            quantite,
+            distribue_a,
+            fournisseur,
             date,
         });
 
         await distribution.save();
 
-        productFound.quantity -= quantity;
+        productFound.quantity -= quantite;
         await productFound.save();
 
         res.status(201).json(distribution);
@@ -58,11 +62,12 @@ export const createDistribution = async (req, res) => {
 
 
 
+
 export const getUserDistributions = async (req, res) => {
     const userId = req.params.userId; 
 
     try {
-        const distributions = await Distribution.find({ user: userId }).populate('product');
+        const distributions = await Distribute.find({ user: userId }).populate('product');
         res.status(200).json(distributions);
     } catch (error) {
         res.status(500).json({ error: 'Erreur du serveur', details: error.message });
