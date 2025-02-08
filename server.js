@@ -62,16 +62,16 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 
-app.use('/api/admin', adminRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/Fournisseur', supplierRoutes);
-app.use('/api/Stock', StockmovementRoutes);
-app.use('/api/Produit', productRoutes);
-app.use('/api/distribuer', DistributeRoutes);
-app.use('/api/consumption-reports', ConsumptionReportsRoutes);
-app.use('/api/weekly-consumption-report', ConsumptionReportsRoutes);
-app.use('/api/Agence', AgencyRoutes);
-app.use('/api/categorie', CategoryRoutes);
+app.use('/admin', adminRoutes);
+app.use('/users', userRoutes);
+app.use('/Fournisseur', supplierRoutes);
+app.use('/Stock', StockmovementRoutes);
+app.use('/Produit', productRoutes);
+app.use('/distribuer', DistributeRoutes);
+app.use('/consumption-reports', ConsumptionReportsRoutes);
+app.use('/weekly-consumption-report', ConsumptionReportsRoutes);
+app.use('/Agence', AgencyRoutes);
+app.use('/categorie', CategoryRoutes);
 
 
 

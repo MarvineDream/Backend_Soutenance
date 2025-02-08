@@ -6,5 +6,3 @@ const supplierSchema = new mongoose.Schema({
 { timestamps: true });
 
 export default mongoose.model('supplier', supplierSchema);
-
-

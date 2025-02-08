@@ -28,7 +28,7 @@ export const addProduct = async (req, res) => {
 
     try {
         
-        if (!code_produit || !produit || !supplier || !category || !price || quantity === undefined || !minStockLevel) {
+        if (!code_produit || !produit || !supplier || !category || !price || !quantity === undefined || !minStockLevel) {
             return res.status(400).json({ error: 'Tous les champs sont requis' });
         }
 

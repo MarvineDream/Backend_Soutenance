@@ -1,5 +1,5 @@
 import express from 'express';
-import { loginUser} from '../controllers/userControllers.js';
+import { loginUser } from '../controllers/userControllers.js';
 import { getUserDistributions } from '../controllers/DistributionControllers.js';
 
 
