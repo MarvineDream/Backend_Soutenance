@@ -5,7 +5,7 @@ import { createAgency, deleteAgency, getAgencies, getAgencyById, updateAgency } 
 const router = express.Router();
 
 
-router.post('/', createAgency);
+router.post('/create_agence', createAgency);
 router.get('/', getAgencies);
 router.get('/:id', getAgencyById);
 router.put('/:id', updateAgency);

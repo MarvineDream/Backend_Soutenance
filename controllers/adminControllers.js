@@ -90,7 +90,7 @@ const createUserForAgency = async (req, res) => {
             }
         });
 
-        const resetUrl = `https://backend-soutenance-1.onrender.com/api/admin/create-user/reset-password/${resetToken}`;
+        const resetUrl = `https://backend-soutenance-1.onrender.com/admin/create-user/reset-password/${resetToken}`;
 
         const mailOptions = {
             from: 'bamboo',
