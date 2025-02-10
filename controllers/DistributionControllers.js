@@ -6,9 +6,9 @@ import mongoose from 'mongoose';
 
 
 export const createDistribution = async (req, res) => {
-    const { code_produit, produit, quantite, distribue_a, fournisseur, date } = req.body;
+    const { code_produit, produit, quantite, destinataire, fournisseur, date } = req.body;
 
-    if (!code_produit || !produit || !quantite || !distribue_a || !fournisseur || !date) {
+    if (!code_produit || !produit || !quantite || !destinataire || !fournisseur || !date) {
         return res.status(400).json({ error: 'Tous les champs sont requis' });
     }
 
@@ -26,11 +26,11 @@ export const createDistribution = async (req, res) => {
             return res.status(400).json({ error: 'Quantité demandée est supérieure à la quantité disponible' });
         }
 
-        // Vérifiez si la localisation est valide en récupérant les agences
-        const agences = await Agency.find(); // Récupère toutes les agences
-        const validAgencyIds = agences.map(agence => agence._id.toString()); // Récupère les IDs des agences
+        
+        const agences = await Agency.find(); 
+        const validAgencyIds = agences.map(agence => agence._id.toString()); 
 
-        if (!validAgencyIds.includes(distribue_a)) {
+        if (!validAgencyIds.includes(destinataire)) {
             return res.status(400).json({ error: 'Localisation non valide' });
         }
 
@@ -38,7 +38,7 @@ export const createDistribution = async (req, res) => {
             code_produit,
             produit,
             quantite,
-            distribue_a,
+            destinataire,
             fournisseur,
             date,
         });
@@ -83,7 +83,7 @@ export const getDistributionById = async (req, res) => {
         .populate('product')
         .populate('Agency')
         .populate('supplier')
-        .populate('distributedTo')
+        .populate('destinataire')
         .populate('date');
         if (!distribution) return res.status(404).json({ message: 'Distribution non trouvée' });
         res.status(200).json(distribution);

@@ -24,13 +24,19 @@ const loginUser = async (req, res) => {
     }
 
     try {
-        const user = await User.findOne({ username });
+        const user = await User.findOne({ username }).populate('agencyId');
         if (!user || !(await bcrypt.compare(password, user.password))) {
             return res.status(401).json({ error: 'Nom d’utilisateur ou mot de passe incorrect' });
         }
 
         const token = generateToken(user);
-        res.status(200).json({ message: 'Connexion réussie', token });
+        
+        // Redirige l'utilisateur vers son tableau de bord
+        res.status(200).json({
+            message: 'Connexion réussie',
+            token,
+            dashboardUrl: `/dashboard/${user.agencyId}/${user.username}` // Arranger la route de redirection de l'utilisateur
+        });
     } catch (error) {
         res.status(500).json({ error: 'Erreur du serveur', details: error.message });
     }

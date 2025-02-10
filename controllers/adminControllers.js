@@ -31,20 +31,58 @@ const registerAdmin = async (req, res) => {
     }
 };
 
+
+
 const loginAdmin = async (req, res) => {
     const { adminName, password } = req.body;
+
+    // Vérification des entrées
+    console.log('Requête de connexion reçue:', { adminName, password });
+    
+    if (!adminName || !password) {
+        console.log('Erreur : Nom d\'administrateur ou mot de passe manquant');
+        return res.status(400).json({ message: 'Nom d\'administrateur et mot de passe requis' });
+    }
+
     try {
         const admin = await Admin.findOne({ adminName });
-        if (admin && await bcrypt.compare(password, admin.password)) {
-            const token = generateToken(admin._id);
-            res.status(200).json({ token, admin });
-        } else {
-            res.status(401).json({ message: 'Identifiants invalides' });
+        console.log('Administrateur trouvé:', admin);
+
+        // Vérification de l'existence de l'administrateur
+        if (!admin) {
+            console.log('Erreur : Administrateur non trouvé');
+            return res.status(401).json({ message: 'Identifiants invalides' });
         }
+
+        // Vérification du mot de passe
+        const isMatch = await bcrypt.compare(password, admin.password);
+        console.log('Comparaison de mot de passe réussie:', isMatch);
+        
+        if (!isMatch) {
+            console.log('Erreur : Mot de passe incorrect');
+            return res.status(401).json({ message: 'Identifiants invalides' });
+        }
+
+        // Génération du token
+        const token = generateToken(admin._id);
+        console.log('Token généré:', token);
+        
+        // Redirection en fonction du rôle
+        if (admin.role === 'admin') {
+            console.log('Redirection vers le tableau de bord admin');
+            return res.status(200).json({ token, redirect: '/admin/dashboard', admin: { id: admin._id, adminName: admin.adminName } });
+        } else {
+            console.log('Erreur : Rôle non reconnu');
+            return res.status(403).json({ message: 'Accès refusé' });
+        }
+
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Erreur lors de la connexion administrateur:', error);
+        res.status(500).json({ message: 'Erreur interne du serveur' });
     }
 };
+
+
 
 const createUserForAgency = async (req, res) => {
     // Validation des champs requis
